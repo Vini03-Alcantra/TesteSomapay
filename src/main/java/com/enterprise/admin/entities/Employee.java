@@ -1,8 +1,13 @@
 package com.enterprise.admin.entities;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
-import org.springframework.data.annotation.CreatedDate;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +16,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "tb_employee")
 @Table(name = "tb_employee")
@@ -20,31 +28,136 @@ public class Employee {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Long ID;
 	
+	@NotBlank
 	@Column(name = "name", nullable = false)
 	private String nome;
+	
+	@NotBlank
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
+	
+	@NotBlank
 	@Column(name = "cpf", nullable = false, unique = true)
 	private String cpf;
+	
+	@Column
+	private String departamento;
+	
+	@NotBlank
 	@Column(name = "post", nullable = false)
 	private String post;
+	
 	@Column(name = "salary", nullable = false, unique = true)
 	private Float salary;
+	
+	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate data;
+	@NotNull
+	private LocalTime horario;
+	
 	@ManyToOne
 	@JoinColumn(name = "enterprise_id")
 	private Enterprise enterprise;
 	
-	@CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-	private Date createdAt;
+	@OneToMany(mappedBy = "employee")	
+	private List<FolhaPagamento> folhaPagamento;
 	
-	public Employee(String nome, String email, String cpf, String post, Float salary, Enterprise enterprise) {
+		
+	public Employee() {}
+
+	public Employee(Long ID, String nome, String email, String cpf, String post, Float salary, Enterprise enterprise) {
+		this.ID = ID;
 		this.nome = nome;
 		this.email = email;
 		this.cpf = cpf;
 		this.post = post;
 		this.salary = salary;
 		this.enterprise = enterprise;
+	}
+	
+	public Long getID() {
+		return ID;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getPost() {
+		return post;
+	}
+
+	public void setPost(String post) {
+		this.post = post;
+	}
+
+	public Float getSalary() {
+		return salary;
+	}
+
+	public void setSalary(Float salary) {
+		this.salary = salary;
+	}
+
+	public Enterprise getEnterprise() {
+		return enterprise;
+	}
+
+	public void setEnterprise(Enterprise enterprise) {
+		this.enterprise = enterprise;
+	}
+
+	public String getDepartamento() {
+		return departamento;
+	}
+
+	public void setDepartamento(String departamento) {
+		this.departamento = departamento;
+	}
+
+	public LocalDate getData() {
+		return data;
+	}
+
+	public void setData(LocalDate data) {
+		this.data = data;
+	}
+
+	public LocalTime getHorario() {
+		return horario;
+	}
+
+	public void setHorario(LocalTime horario) {
+		this.horario = horario;
+	}
+
+	public List<FolhaPagamento> getFolhaPagamento() {
+		return folhaPagamento;
+	}
+
+	public void setFolhaPagamento(List<FolhaPagamento> folhaPagamento) {
+		this.folhaPagamento = folhaPagamento;
 	}
 	
 	
