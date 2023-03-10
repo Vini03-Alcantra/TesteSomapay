@@ -42,6 +42,20 @@ public class EnterpriseService {
 		}
 	}
 	
+	public Float getSaldoBalanceEnterprise(Long enterprise_id) {
+		try {
+			Enterprise enterprise = this.enterpriseRepository.getReferenceById(enterprise_id);
+			if(enterprise == null) {
+				return null;
+			}
+			
+			
+			return enterprise.getBalance();
+		} catch (Exception e) {
+			throw new Error("Erro ao consultar o saldo empresa");
+		}
+	}
+	
 	public Enterprise getEnterpriseByID(Long id) {
 		try {
 			Enterprise enterprise = this.enterpriseRepository.getReferenceById(id);
@@ -49,6 +63,7 @@ public class EnterpriseService {
 				return null;
 			}
 			Enterprise enterpriseResponse = this.convertEnterprise(enterprise.getID(), enterprise.getNome(), enterprise.getCnpj(), enterprise.getBalance(), enterprise.getData(), enterprise.getHorario());
+			
 			return enterpriseResponse;
 		} catch (Exception e) {
 			throw new Error("Erro ao buscar empresa por ID");
@@ -64,7 +79,6 @@ public class EnterpriseService {
 				.stream()
 				.filter(enterprise -> enterprise.getCnpj() == cnpj)
 				.findFirst();
-			System.out.println("Enterprise Find" +enterpriseFind);
 			
 			if(enterpriseFind.isEmpty()) {
 				return null;

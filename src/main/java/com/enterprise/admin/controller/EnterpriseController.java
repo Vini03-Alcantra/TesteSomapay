@@ -50,6 +50,12 @@ public class EnterpriseController {
 		return ResponseEntity.ok().body(enterprise);
 	}
 	
+	@GetMapping(value = "balance/{id}")
+	public ResponseEntity<Float> getEnterpriseBalanceSaldo(@PathVariable(name = "id") Long enterpriseID) {				
+		Float balance = this.enterpriseService.getSaldoBalanceEnterprise(enterpriseID);
+		return ResponseEntity.ok().body(balance);
+	}
+	
 	@GetMapping("/list")
 	public ResponseEntity<List<Enterprise>> getAllList() {
 		List<Enterprise> enterprise = this.enterpriseService.findAll();
@@ -129,6 +135,14 @@ public class EnterpriseController {
 		return ResponseEntity.ok().body(employee);
 	}
 	
+	@GetMapping("/employee/saldo/{id}")
+	public ResponseEntity<Employee> getSaldoEmployee(
+			@PathVariable(name = "id") Long employeeID
+	) {
+		Employee employee = employeeService.getEmployeeByID(employeeID);
+		return ResponseEntity.ok().body(employee);
+	}
+	
 	@PutMapping("/{employeeId}")
 	public ResponseEntity<EmployeeDTO> updateEmployee(
 			@PathVariable(name = "id") Long employeeID,
@@ -165,6 +179,31 @@ public class EnterpriseController {
 		return ResponseEntity.ok().body(folhaPagamento);
 	}
 	
+	@GetMapping("/folha/employee/{employee_id}")
+	public ResponseEntity<Double> getSaldoBalanceByEmployee(
+			@PathVariable(name = "employee_id") Long employeeID
+	) {
+		Employee employee = this.employeeService.getEmployeeByID(employeeID);
+		if(employee == null) {
+			return ResponseEntity.badRequest().body(null);
+		}
+		Double result = this.folhaPagamentoService.getSaldoEmploye(employeeID);
+		
+		return ResponseEntity.ok().body(result);
+	}
+	
+	@GetMapping("/folha/{enterprise_id}")
+	public ResponseEntity<List<FolhaPagamento>> listFolhaPagamentoByEnterprise(
+			@PathVariable(name = "enterprise_id") Long enterpriseID
+	) {
+		Enterprise enterprise = this.enterpriseService.getEnterpriseByID(enterpriseID);
+		System.out.println(enterpriseID	);
+		if (enterprise == null) {
+			return ResponseEntity.badRequest().body(null);
+		}
+		List<FolhaPagamento> listFolhaByEnterpise = this.folhaPagamentoService.listFolhaPagamentoByEnterpise(enterpriseID);
+		return ResponseEntity.ok().body(listFolhaByEnterpise);
+	}
 	
 	// Increase Balance route
 	@PostMapping("/increase/{enterprise_id}")

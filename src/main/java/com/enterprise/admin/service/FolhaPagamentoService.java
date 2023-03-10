@@ -68,6 +68,37 @@ public class FolhaPagamentoService {
 		}
 	}
 	
+	public Double getSaldoEmploye(Long employee_id) {
+		try {
+			List<FolhaPagamento> listFolha = this.folhapagamentoReposiotry.findAll();
+			Double saldoEmployee = 0.0;
+			if(listFolha == null) {
+				return null;
+			}
+			List<FolhaPagamento> listFolhaByEnterprise = listFolha
+					.stream()
+					.filter(folha -> folha.getEmployee().getID() == employee_id)
+					.toList();
+			
+			for(FolhaPagamento folha : listFolhaByEnterprise) {
+				saldoEmployee += folha.getSalary();
+			}
+			
+			return saldoEmployee;
+		} catch (Exception e) {
+			throw new Error("Erro ao tentar gerar cálculo");
+		}
+	}
+	
+	public List<FolhaPagamento> listFolhaPagamentoByEnterpise(long enterprise_id){
+		List<FolhaPagamento> folhaPagamento = this.folhapagamentoReposiotry
+				.findAll()
+				.stream()
+				.filter(folha -> folha.getEnterprise().getID() == enterprise_id)
+				.toList();
+		return folhaPagamento;
+	}
+	
 	public FolhaPagamento convertFolhaPagmaneto(Long ID, Float salary, Enterprise enterprise, Employee employee, LocalDate data, LocalTime horario) {
 		FolhaPagamento folhaPagamento = new FolhaPagamento(ID, salary, enterprise, employee, data, horario);
 		return folhaPagamento;

@@ -66,16 +66,24 @@ public class Employee {
 		
 	public Employee() {}
 
-	public Employee(Long ID, String nome, String email, String cpf, String post, Float salary, Enterprise enterprise) {
-		this.ID = ID;
+	
+	
+	public Employee(Long iD, @NotBlank String nome, @NotBlank String email, @NotBlank String cpf, String departamento,
+			@NotBlank String post, Float salary, @NotNull LocalDate data, @NotNull LocalTime horario, Enterprise enterprise) {
+		ID = iD;
 		this.nome = nome;
 		this.email = email;
 		this.cpf = cpf;
+		this.departamento = departamento;
 		this.post = post;
 		this.salary = salary;
+		this.data = data;
+		this.horario = horario;
 		this.enterprise = enterprise;
 	}
-	
+
+
+
 	public Long getID() {
 		return ID;
 	}

@@ -1,5 +1,7 @@
 package com.enterprise.admin.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +13,7 @@ import com.enterprise.admin.dto.EmployeeResponseDTO;
 import com.enterprise.admin.entities.Employee;
 import com.enterprise.admin.entities.Enterprise;
 import com.enterprise.admin.repository.EmployeeRepository;
+import com.enterprise.admin.repository.FolhapagamentoReposiotry;
 
 import jakarta.transaction.Transactional;
 
@@ -19,13 +22,14 @@ public class EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	@Autowired
-	private EnterpriseService enterpriseService;
+	private FolhapagamentoReposiotry folhapagamentoReposiotry;
 	
 	public List<Employee> getEmployeeList(Long enterpriseID){
-		Enterprise enterpriseFound = this.enterpriseService.getEnterpriseByID(enterpriseID);		
-		List<Employee> employeeResponse = enterpriseFound.getEmployee();
-	
-		return employeeResponse;
+		List<Employee> employee = this.employeeRepository.findAll()
+			.stream()
+			.filter(em -> em.getEnterprise().getID() == enterpriseID).toList();
+		
+		return employee;
 	}
 	
 	public Employee getEmployeeByID(Long id) {
@@ -33,8 +37,9 @@ public class EmployeeService {
 		if(employee == null) {
 			return null;
 		}
+		Employee employeeResponse = this.convertEmployee(employee.getID(), employee.getNome(), employee.getEmail(), employee.getCpf(), employee.getPost(), 
+					employee.getSalary(), employee.getData(), employee.getHorario(), employee.getEnterprise());
 		
-		Employee employeeResponse = this.convertEmployee(employee.getID(), employee.getNome(), employee.getEmail(), employee.getCpf(), employee.getPost(), employee.getSalary(), employee.getEnterprise());
 		return employeeResponse;
 	}
 	
@@ -117,8 +122,8 @@ public class EmployeeService {
 		}
 	}
 	
-	public Employee convertEmployee(Long ID, String nome, String email, String cpf, String post, Float salary, Enterprise enterprise) {
-		Employee employeeGenerate = new Employee(ID, nome, email, cpf, post, salary, enterprise);
+	public Employee convertEmployee(Long ID, String nome, String email, String cpf, String post, Float salary, LocalDate data, LocalTime horario,Enterprise enterprise) {
+		Employee employeeGenerate = new Employee(ID, nome, email, cpf, post, post, salary, data, horario, enterprise);
 		return employeeGenerate;
 	}
 	
