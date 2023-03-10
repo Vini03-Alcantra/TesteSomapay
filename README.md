@@ -15,9 +15,15 @@ Sistema de pagamento feito em Spring boot pra realizar teste pra Somapay
 - `/enterprise`: Post  
 - `/enterprise/${id_enterprise}`: GET
 - `/enterprise/employee/${id_enterprise}`: POST
+- `/enterprise/employee/${id_employee}`: GET
+- `/enterprise/employee/list/${id_enterprise}`: GET
 - `/enterprise/folha/${id_enterprise}`: POST
 - `/enterprise/folha/employee/${id_employee}`: GET
 
+### API SECUNDARIAS
+- `/enterprise/increase/${id_enterprise}`: POST
+- `/enterprise/balance/${id_enterprise}`: GET
+- `/enterprise/list`: GET
 
 ### JSON EXEMPLOS
 
@@ -49,4 +55,13 @@ Sistema de pagamento feito em Spring boot pra realizar teste pra Somapay
 	"salary": 5000,
 	"data": "2022-12-13",
 	"horario": "10:30"
+}
+
+#### IncreaseInBalance
+###### API vai receber informações para aumentar o valor do saldo da empresa
+{
+	"origin": "matercard",
+	"valor": 1500,
+	"data": "2023-06-12",
+	"horario": "10:00"
 }
